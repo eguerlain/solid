@@ -1,0 +1,22 @@
+{
+    "en": {
+        "translation": {
+            "welcome": "Welcome to Solid",
+            "i-become-volunteer": "I enroll as a volunteer",
+            "i-am-already-volunteer": "I'm already a volunteer",
+            "i-go-shopping": "I go shopping",
+            "cgu": "End-user license agreement",
+            "my-address": "My address"
+        }
+    },
+    "fr": {
+        "translation": {
+            "welcome": "Bienvenue sur Solid",
+            "i-become-volunteer": "Je deviens volontaire",
+            "i-am-already-volunteer": "Je suis déjà volontaire",
+            "i-go-shopping": "Je fais les courses",
+            "cgu": "Conditions générales d'utilisation",
+            "my-address": "Mon adresse"
+        }
+    }
+}
