@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useVolunteerContext } from '../../context/volunteer'
 import { Button } from '../../ui/button'
 import { Input } from '../../ui/input'
 import { Layout } from '../../ui/layout'
-import { BackButton } from '../backButton'
 import { notify } from '../../ui/toast'
+import { BackButton } from '../backButton'
 
 export const LoginPage = () => {
     const { t } = useTranslation()

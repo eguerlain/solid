@@ -9,14 +9,24 @@ interface Props {
     color?: string;
     backgroundColor?: Color;
     onClick?: () => void;
-    linkTo?: string;
+    linkTo?: string | { pathname: string, state: { backpath: string } };
     leftIcon?: string;
     onLeftIconClick?: () => void;
     rightIcon?: string;
     onRightIconClick?: () => void;
 }
 
-export const Button = ({ children, color, backgroundColor, onClick, linkTo, leftIcon, onLeftIconClick, rightIcon, onRightIconClick }: Props) => {
+export const Button = ({
+    children,
+    color,
+    backgroundColor,
+    onClick,
+    linkTo,
+    leftIcon,
+    onLeftIconClick,
+    rightIcon,
+    onRightIconClick
+}: Props) => {
     const button = (
         <div
             className={styles.button}
@@ -52,6 +62,7 @@ export const Button = ({ children, color, backgroundColor, onClick, linkTo, left
                 >{rightIcon}</div>}
         </div>
     )
+
     return (
         linkTo
             ? <Link to={linkTo}>{button}</Link>

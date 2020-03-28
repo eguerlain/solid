@@ -8,7 +8,12 @@ export const VolunteerPage = () => {
     return <Layout title={{ children: t('volunteer-space') }}>
         <p>{t('epxplanations-volunteer')}</p>
         <Button linkTo="lists" >{t('manage-my-needs')}</Button>
-        <Button linkTo="orders" >{t('i-go-shopping')}</Button>
+        <Button linkTo={{
+            pathname: 'orders',
+            state: {
+                backpath: 'volunteer'
+            }
+        }} >{t('i-go-shopping')}</Button>
         <Button linkTo="parameters" >{t('parameters')}</Button>
     </Layout>
 }

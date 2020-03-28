@@ -5,60 +5,77 @@ import { DownArrow } from './downArrowIcon'
 import { Color } from '../style'
 import './collapse.css'
 import classnames from 'classnames'
-
-interface Volunteer {
-    name: "Joe Biden",
-    address: "10, rue de la Tournette, 75006 PARIS"
-}
-
-interface Item {
-    title: string,
-    quantity: number,
-    availableToBuy: boolean
-}
+import { Item, VolunteerInformation, untickItem as APIUntickItem, tickItem as APITickItem } from '../../api/back'
+import { notify } from '../toast'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
-    volunteer?: Volunteer,
-    items?: Item[]
+    volunteerInformation: VolunteerInformation,
+    items: Item[]
 }
 
-const fake_items: Item[] = [
-    {
-        title: 'Pain',
-        quantity: 4,
-        availableToBuy: true
-    },
-    {
-        title: 'Eau',
-        quantity: 3,
-        availableToBuy: false
-    },
-    {
-        title: 'Vin',
-        quantity: 4,
-        availableToBuy: true
-    },
-]
+export const Order = ({ volunteerInformation, items: baseItems }: Props) => {
 
-export const Order = ({ volunteer, items }: Props) => {
-
+    const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [items, setItems] = useState<Item[]>(baseItems)
+
+    const untickItem = async (item: Item) => {
+        try {
+            await APIUntickItem()
+            setItems(items.map(i => {
+                if (i.id === item.id) {
+                    i.boughtBy = null
+                }
+                return i
+            }))
+        } catch (error) {
+            notify(t('could-not-untick-item'))
+        }
+    }
+
+    const tickItem = async (item: Item) => {
+        try {
+            await APITickItem()
+            setItems(items.map(i => {
+                if (i.id === item.id) {
+                    i.boughtBy = 'browser-session-id'
+                }
+                return i
+            }))
+        } catch (error) {
+            notify(t('could-not-tick-item'))
+        }
+    }
+
+    const toggleItemStatus = async (item: Item) => {
+        if (item.boughtBy) {
+            await untickItem(item)
+        } else {
+            await tickItem(item)
+        }
+    }
 
     return <div className={styles.order}>
         <div className={styles.header}>
             <div className={styles.name} onClick={() => setIsOpen(!isOpen)}>
-                <p>{"volunteer.name"}</p>
+                <p>{volunteerInformation.name}</p>
                 <DownArrow color={Color.white} reverse={isOpen} />
             </div>
             <Collapse isOpened={isOpen} >
-                <p className={styles.address}>{"volunteer.address"}</p>
+                <p className={styles.address}>{volunteerInformation.contactInformation}</p>
+                <p className={styles.address}>{volunteerInformation.messageToShoppers}</p>
             </Collapse>
         </div>
         <ul className={styles.list}>
             {
-                fake_items.map(item => <li key={item.title} className={classnames(styles.item, {
-                    [styles.availableToBuy]: !item.availableToBuy
-                })}>
+                items.map(item => <li
+                    key={item.title}
+                    className={classnames(styles.item, {
+                        [styles.notAvailableToBuy]: item.boughtBy
+                    })}
+                    onClick={() => { toggleItemStatus(item) }}
+                >
                     <div className={styles.itemContent}>
 
                         <span>{item.title}</span>

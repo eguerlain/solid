@@ -27,17 +27,20 @@ export const ParametersPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const { contactInformation, messageToShoppers } = await getParameters()
-                setContactInformation(contactInformation)
-                setMessageToShoppers(messageToShoppers)
-            } catch (err) {
-                notify(t('could-not-retrieve-information'))
+            if (!wasDataFetched) {
+                try {
+                    const { contactInformation, messageToShoppers } = await getParameters()
+                    setContactInformation(contactInformation)
+                    setMessageToShoppers(messageToShoppers)
+                } catch (err) {
+                    notify(t('could-not-retrieve-information'))
+                }
+                setWasDataFetched(true)
             }
         }
 
         fetchData()
-    }, [wasDataFetched, setWasDataFetched])
+    }, [wasDataFetched, setWasDataFetched, t])
 
     const logout = () => {
         logOutContext()
@@ -45,7 +48,7 @@ export const ParametersPage = () => {
     }
 
     return <Layout title={{ leftIcon: <BackButton to='volunteer' />, children: t('parameters') }}>
-        <Input value={contactInformation} placeholder={t('contact-information')} onChange={event => setContactInformation(event.target.value)} onAction={saveParameters}/>
+        <Input value={contactInformation} placeholder={t('contact-information')} onChange={event => setContactInformation(event.target.value)} onAction={saveParameters} />
         <Input value={messageToShoppers} placeholder={t('message-to-shoppers')} onChange={event => setMessageToShoppers(event.target.value)} onAction={saveParameters} />
         <Button onClick={saveParameters}>{t('save')}</Button>
         <Button onClick={logout}>{t('logout')}</Button>

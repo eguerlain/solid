@@ -1,4 +1,5 @@
 import axios from 'axios'
+import qs from 'qs'
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -15,11 +16,30 @@ export interface List {
     items: Item[]
 }
 
+export interface SignupInformation {
+    firstname: string,
+    lastname: string,
+    phone: string,
+    email: string,
+    password: string,
+    address: string,
+}
 
 const backClient = axios.create({
     baseURL: API_URL,
     timeout: 5000,
 })
+
+const geocodingClient = axios.create({
+    baseURL: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:7000',
+    timeout: 5000
+})
+
+export const signup = async (signupInformation: SignupInformation): Promise<string> => {
+    const response = await backClient.post('/signup', signupInformation)
+
+    return response.data.token
+}
 
 export const login = async (username: string, password: string): Promise<string> => {
     const response = await backClient.post('/login', {
@@ -66,4 +86,50 @@ export const getParameters = async (): Promise<{ contactInformation: string, mes
 
 export const setParameters = async (parameters: { contactInformation: string, messageToShoppers: string }): Promise<void> => {
     return await backClient.put('/parameters', parameters)
+}
+
+export interface VolunteerInformation {
+    name: string,
+    contactInformation: string,
+    messageToShoppers: string
+}
+
+export interface Order {
+    volunteerInformation: VolunteerInformation,
+    items: Item[]
+}
+
+export const getNeedsAround = async (location: Location): Promise<Order[]> => {
+    const response = await backClient.get(`/needs-around?${qs.stringify(location)}`)
+
+    return response.data
+}
+
+export const tickItem = async (): Promise<void> => {
+    return await backClient.patch('/items/123', {
+        status: 'tick'
+    })
+}
+
+export const untickItem = async (): Promise<void> => {
+    return await backClient.patch('/items/123', {
+        status: 'untick'
+    })
+}
+
+export const geocode = async (address: string): Promise<any[]> => {
+    const response = await geocodingClient.get(`/geocode?address=${address}`)
+
+    return response.data
+}
+
+export interface Location {
+    latitude: number,
+    longitude: number
+}
+
+export const reverse = async (location: Location): Promise<any[]> => {
+    const response = await geocodingClient.get(`/reverse?${qs.stringify(location)}`)
+
+    return response.data
 }
