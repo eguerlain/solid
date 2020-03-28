@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useVolunteerContext } from '../../context/volunteer'
 import { Button } from '../../ui/button'
@@ -14,14 +14,16 @@ export const LoginPage = () => {
 
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const passwordInput = useRef<HTMLInputElement>(null)
 
     const login = async () => {
-        try {
-            await logInContext(username, password)
-            setRedirectToReferrer(true) // Just to trigger re-rendering
-        } catch (err) {
-            // TODO Display toast (might need some logic to prevent re-rendering then)
-            notify(t('wrong-login-credentials'))
+        if (username && password) {
+            try {
+                await logInContext(username, password)
+                setRedirectToReferrer(true) // Just to trigger re-rendering
+            } catch (err) {
+                notify(t('wrong-login-credentials'))
+            }
         }
     }
 
@@ -37,8 +39,24 @@ export const LoginPage = () => {
     // }
 
     return <Layout title={{ leftIcon: <BackButton to="/" />, children: t('login') }}>
-        <Input value={username} placeholder={t('username-placeholder')} onChange={event => setUsername(event.target.value)} />
-        <Input value={password} placeholder={t('password-placeholder')} onChange={event => setPassword(event.target.value)} />
+        <Input
+            value={username}
+            placeholder={t('username-placeholder')}
+            onChange={event => setUsername(event.target.value)}
+            onAction={() => {
+                if (passwordInput.current) {
+                    passwordInput.current.focus()
+                }
+            }}
+        />
+        <Input
+            value={password}
+            placeholder={t('password-placeholder')}
+            onChange={event => setPassword(event.target.value)}
+            type='password'
+            onAction={login}
+            reference={passwordInput}
+        />
         <Button onClick={login}>{t('login')}</Button>
         <Button>{t('forgotten-password')}</Button>
     </Layout>

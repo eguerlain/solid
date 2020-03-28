@@ -14,7 +14,7 @@ interface Volunteer {
 interface Item {
     title: string,
     quantity: number,
-    available: boolean
+    availableToBuy: boolean
 }
 
 interface Props {
@@ -26,17 +26,17 @@ const fake_items: Item[] = [
     {
         title: 'Pain',
         quantity: 4,
-        available: true
+        availableToBuy: true
     },
     {
         title: 'Eau',
         quantity: 3,
-        available: false
+        availableToBuy: false
     },
     {
         title: 'Vin',
         quantity: 4,
-        available: true
+        availableToBuy: true
     },
 ]
 
@@ -56,10 +56,10 @@ export const Order = ({ volunteer, items }: Props) => {
         </div>
         <ul className={styles.list}>
             {
-                fake_items.map(item => <li key={item.title} className={styles.item}>
-                    <div className={classnames(styles.itemContent, {
-                        [styles.available]: !item.available
-                    })}>
+                fake_items.map(item => <li key={item.title} className={classnames(styles.item, {
+                    [styles.availableToBuy]: !item.availableToBuy
+                })}>
+                    <div className={styles.itemContent}>
 
                         <span>{item.title}</span>
                         <span>(X{item.quantity})</span>

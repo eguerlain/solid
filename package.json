@@ -34,7 +34,7 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "predeploy": "yarn run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "mkdir build/solid && mv build/static build/solid/. && scp -r ./build etienne@51.254.200.117:."
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -61,6 +61,6 @@
     "@types/react-modal": "^3.10.5",
     "@types/react-router-dom": "^5.1.3",
     "@types/uuid": "^7.0.2",
-    "gh-pages": "^2.2.0"
+    "serve": "^11.3.0"
   }
 }

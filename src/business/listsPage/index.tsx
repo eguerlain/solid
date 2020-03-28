@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Layout } from '../../ui/layout'
-import { BackButton } from '../backButton'
+import { addList, getLists } from '../../api/back'
 import { Button } from '../../ui/button'
 import { Input } from '../../ui/input'
-import { v4 } from 'uuid'
+import { Layout } from '../../ui/layout'
 import { notify } from '../../ui/toast'
-import { getLists } from '../../api/back'
+import { BackButton } from '../backButton'
 
 export const ListsPage = () => {
     const { t } = useTranslation()
@@ -23,10 +22,7 @@ export const ListsPage = () => {
         }
 
         fetchLists()
-    }, [lists, setLists])
-
-    // TODO Contact back if no list in context
-    // No need to contact back if there is something, granted
+    }, [t])
 
     const [newListTitle, setNewListTitle] = useState<string>('')
 
@@ -34,9 +30,12 @@ export const ListsPage = () => {
         <p>{t('needs-explanations')}</p>
 
         {
-            // lists.map(list => <Button key={list.id} linkTo={`lists/${list.id}`}>
-            //     {list.title}
-            // </Button>)
+            lists && lists.map(list => <Button
+                key={list.id}
+                linkTo={`lists/${list.id}`}
+            >
+                {list.title}
+            </Button>)
         }
 
         <Input
@@ -44,15 +43,14 @@ export const ListsPage = () => {
             placeholder={t('new-list')}
             buttonLabel={t('add-new-list')}
             onChange={event => setNewListTitle(event.target.value)}
-            onAction={() => {
-                // TODO contact the back to add a list
-                // Get the id back
-                // addList({
-                //     title: newListTitle,
-                //     id: v4(),
-                //     items: []
-                // })
-                setNewListTitle('')
+            onAction={async () => {
+                try {
+                    const newList = await addList(newListTitle)
+                    setLists((lists || []).concat(newList))
+                    setNewListTitle('')
+                } catch (error) {
+                    notify(t('could-not-post-new-list'))
+                }
             }}
         />
     </Layout>

@@ -1,11 +1,12 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:5000'
+const API_URL = process.env.REACT_APP_API_URL
 
 export interface Item {
     title: string,
     quantity: number,
     id: string,
+    boughtBy: string | null
 }
 
 export interface List {
@@ -35,6 +36,12 @@ export const getLists = async (): Promise<{ title: string, id: string }[]> => {
     return response.data
 }
 
+export const addList = async (title: string): Promise<List> => {
+    const response = await backClient.post(`/lists`, { title })
+
+    return response.data
+}
+
 export const getList = async (id: string): Promise<List> => {
     const response = await backClient.get(`/lists/${id}`)
 
@@ -45,4 +52,18 @@ export const addItemToList = async (item: { title: string, quantity: number }, l
     const response = await backClient.post(`/lists/${list.id}/items`, item)
 
     return response.data
+}
+
+export const removeItemFromList = async (itemId: string, list: List): Promise<void> => {
+    return await backClient.delete(`/lists/${list.id}/items/${itemId}`)
+}
+
+export const getParameters = async (): Promise<{ contactInformation: string, messageToShoppers: string }> => {
+    const response = await backClient.get('/parameters')
+
+    return response.data
+}
+
+export const setParameters = async (parameters: { contactInformation: string, messageToShoppers: string }): Promise<void> => {
+    return await backClient.put('/parameters', parameters)
 }

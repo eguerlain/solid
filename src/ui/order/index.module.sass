@@ -9,6 +9,7 @@
 .header
     background-color: $black
     color: $white
+    cursor: pointer
 
 .name
     display: flex
@@ -30,13 +31,15 @@
 .item
     padding: 24px
     border-bottom: solid 1px $lightGrey
+    cursor: pointer
+
+.availableToBuy
+    text-decoration: line-through
+    opacity: 0.4
+    cursor: default
 
 .itemContent
     flex: 1
     display: flex
     flex-direction: row
     justify-content: space-between
-
-.available
-    text-decoration: line-through
-    opacity: 0.4

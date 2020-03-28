@@ -1,0 +1,36 @@
+@import ../../ui/style/colors
+
+.quantityInput
+    display: flex
+    flex-direction: row
+
+.quantitySelector
+    display: flex
+    flex-direction: row
+    border: solid 1px $blue
+    border-radius: 6px
+    overflow: hidden
+    user-select: none
+
+    .button
+        padding: 6px 12px
+        display: flex
+        font-size: 14px
+        font-weight: bold
+        background-color: $blue
+        color: $white
+        width: 30px
+        box-sizing: border-box
+        cursor: pointer
+
+    .quantity
+        font-size: 14px
+        display: flex
+        align-items: center
+        justify-content: center
+        padding: 6px 12px
+        width: 30px
+        box-sizing: border-box
+
+.inputWrapper
+    flex: 1
